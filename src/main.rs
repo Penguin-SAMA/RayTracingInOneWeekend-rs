@@ -1,3 +1,5 @@
+use indicatif::{ProgressBar, ProgressStyle};
+
 fn main() {
     // Image
 
@@ -9,6 +11,16 @@ fn main() {
     println!("P3");
     println!("{image_width} {image_height}");
     println!("255");
+
+    // indicatif
+    let pb = ProgressBar::new(image_height as u64);
+    pb.set_style(
+        ProgressStyle::with_template(
+            "{spinner:.green}    [{wide_bar:.cyan/blue}]      {pos}/{len} ETA {eta}           ",
+        )
+        .unwrap()
+        .progress_chars("#>-"),
+    );
 
     for j in 0..image_height {
         for i in 0..image_width {
@@ -25,5 +37,7 @@ fn main() {
 
             println!("{ir} {ig} {ib}");
         }
+        pb.inc(1);
     }
+    pb.finish_with_message("Done");
 }
