@@ -1,16 +1,19 @@
+use std::io::BufWriter;
+
 use indicatif::{ProgressBar, ProgressStyle};
+
+mod color;
+use color::Color;
+mod vec3;
 
 fn main() {
     // Image
 
-    let image_width = 256;
-    let image_height = 256;
+    let image_width: usize = 256;
+    let image_height: usize = 256;
 
-    // Render
-
-    println!("P3");
-    println!("{image_width} {image_height}");
-    println!("255");
+    // let inv_w = 1.0 / (image_width - 1) as f64;
+    // let inv_h = 1.0 / (image_height - 1) as f64;
 
     // indicatif
     let pb = ProgressBar::new(image_height as u64);
@@ -22,20 +25,24 @@ fn main() {
         .progress_chars("#>-"),
     );
 
+    // stdout
+    let stdout = std::io::stdout();
+    let mut out = BufWriter::new(stdout.lock());
+
+    // Render
+
+    println!("P3");
+    println!("{image_width} {image_height}");
+    println!("255");
+
     for j in 0..image_height {
         for i in 0..image_width {
-            let image_width_f64 = image_width as f64;
-            let image_height_f64 = image_height as f64;
-
-            let r = i as f64 / image_width_f64;
-            let g = j as f64 / image_height_f64;
-            let b = 0.0;
-
-            let ir = (255.999 * r) as i32;
-            let ig = (255.999 * g) as i32;
-            let ib = (255.999 * b) as i32;
-
-            println!("{ir} {ig} {ib}");
+            let pixel_color = Color::new(
+                i as f64 / (image_width - 1) as f64,
+                j as f64 / (image_height - 1) as f64,
+                0.,
+            );
+            color::write_color(&mut out, pixel_color).unwrap();
         }
         pb.inc(1);
     }
