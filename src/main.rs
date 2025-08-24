@@ -10,7 +10,21 @@ use ray::Ray;
 mod vec3;
 use vec3::{Point3, Vec3};
 
-fn ray_color(r: &Ray) -> Color {
+fn hit_sphere(center: Point3, radius: f64, r: Ray) -> bool {
+    let oc = center - r.origin();
+    let a = vec3::dot(r.direction(), r.direction());
+    let b = -2.0 * vec3::dot(r.direction(), oc);
+    let c = vec3::dot(oc, oc) - radius * radius;
+    let discriminant = b * b - 4.0 * a * c;
+
+    discriminant >= 0.0
+}
+
+fn ray_color(r: Ray) -> Color {
+    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r) {
+        return Color::new(1.0, 0.0, 0.0);
+    }
+
     let unit_direction = vec3::unit(r.direction());
     let a = (unit_direction.y + 1.0) * 0.5;
     Color::new(1.0, 1.0, 1.0) * (1.0 - a) + Color::new(0.5, 0.7, 1.0) * a
@@ -66,7 +80,7 @@ fn main() {
             let ray_direction = pixel_center - camera_center;
             let r = Ray::new(camera_center, ray_direction);
 
-            let pixel_color = ray_color(&r);
+            let pixel_color = ray_color(r);
             color::write_color(&mut out, pixel_color).unwrap();
         }
         pb.inc(1);
