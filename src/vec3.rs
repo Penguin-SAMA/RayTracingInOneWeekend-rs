@@ -14,12 +14,12 @@ impl Vec3 {
         Self { x, y, z }
     }
 
-    pub fn length_sqaured(&self) -> f64 {
+    pub fn length_squared(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
     pub fn length(&self) -> f64 {
-        self.length_sqaured().sqrt()
+        self.length_squared().sqrt()
     }
 }
 
