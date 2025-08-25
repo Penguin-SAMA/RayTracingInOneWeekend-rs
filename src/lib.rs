@@ -7,6 +7,7 @@ pub const fn degrees_to_radians(deg: f64) -> f64 {
     deg * PI / 180.0
 }
 
+pub mod camera;
 pub mod color;
 pub mod hittable;
 pub mod hittable_list;
@@ -16,6 +17,7 @@ pub mod ray;
 pub mod sphere;
 pub mod vec3;
 
+pub use camera::Camera;
 pub use color::{write_color, Color};
 pub use hittable::{HitRecord, Hittable};
 pub use hittable_list::HittableList;
